@@ -1,0 +1,35 @@
+body{
+	font-size:1em;
+	 padding-top: 50px;
+	 margin-bottom:63px; 
+	 /*background-image:url('https://media.gettyimages.com/photos/defocused-green-blurred-abstract-background-picture-id508374604');*/
+	}
+.errorMargin{
+	margin:0 20px 10px 20px;
+	padding:10px 40px 10px 40px;
+}
+.formError {
+	color: red;
+	border: 1px solid red;
+}
+.formSuccess{
+	color: green;
+	border: 1px solid green;
+}
+.media{
+	border:2px solid black;
+	padding:10px;
+}
+.media-body{
+	padding:10px;
+}
+.center-list{
+	margin:0 auto;
+	width:50%;
+}
+.centering{
+	width:68%;
+	margin:81px auto;
+	border:2px solid black;
+	padding:10px	;
+}

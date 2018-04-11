@@ -1,0 +1,10 @@
+<%= form_for(@comment,remote: true) do |f|%>
+  <div class="form-group">          
+    <%=f.text_area :body,class:"form-control"%>
+    <%#=best_in_place @comment, :body, :as => :textarea%>
+  </div>
+  <label for="review_rating">Rating</label>
+  <div id="rating-form"></div>  
+  <br>
+  <%= f.submit class: "btn btn-primary"%>
+<%end%>

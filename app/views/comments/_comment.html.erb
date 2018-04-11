@@ -1,0 +1,22 @@
+<div class="media mb-4  comment_id_<%=@comment.id%>
+	<img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
+	<div class="media-body" id="blog_comment">
+  		<h5 class="mt-0"><%=@comment.user.try(:email)%></h5>
+	    <%=best_in_place @comment,:body%>
+	    <%=@comment.rating%>
+	    <div class="review-rating" data-score="<%=@comment.rating%>"></div>
+	    <%if can? :destroy,@comment%>
+	    	<%=link_to "delete",comment_path(@comment),method: :delete,remote:true%>
+	    	<%=link_to "edit",edit_comment_path(@comment)%>	
+	    <%end%>
+	</div>
+</div>
+<script type="text/javascript">
+	$('.review-rating').raty({ 
+		readOnly: true,
+		score: function(){
+			return $(this).attr('data-score');
+		},
+		star:5
+});
+</script>

@@ -1,0 +1,98 @@
+<%if user_signed_in?%>
+        <%= current_user.email%>|
+        <%=link_to "log out",destroy_user_session_path,method: :delete%>
+    <%else%>
+      <%=link_to "register",new_user_registration_path%>|
+      <%= link_to 'sign in',new_user_session_path%>
+    <%end%>
+  	<%= link_to "articles" , articles_path %> | <%= link_to "categories", categories_path%> | <%=link_to "add categories" , new_category_path%> | <%=link_to "add articles",new_article_path%>
+    <%=notice%>
+    <%= alert%>
+    <%= yield %>
+    <%if user_signed_in?%>
+      <p>ip address is<%= current_user.current_sign_in_ip%></p>
+<%end%>
+
+
+
+
+
+
+
+<!-- <div class="row">
+<! Blog Entries Column -->
+ <!--  <div class="col-md-8">
+          <h1 class="display-5">Listing Article
+            <small><#%=#@articles.count%></small>
+          </h1>
+  </div> -->
+ <!-- Blog Post -->
+  <%#@articles.each do |article|%>
+    <!-- <div class="card mb-4">
+      <! <img class="card-img-top" src="http://placehold.it/750x300" alt="Card image cap"> -->
+      <%#= image_tag(article.image,size:'50x200',class:"card-img-top")%>
+      <!-- <div class="card-body"> -->
+        <!-- <h2 class="card-title"><%#=article.title%></h2> -->
+        <!-- <p class="card-text"><%#=article.body.truncate(200)%></p> -->
+        <%#link_to "read more",article,class:'btn btn-primary'%>
+      <!-- </div> -->
+      <!-- <div class="card-footer text-muted"> -->
+        <!-- Posted on <%#=article.publish_date.strftime("%B %d %Y")%> -->
+        <%#= link_to article.category.name,article.category%>
+      <!-- </div> -->
+    <!-- </div> -->
+    <%#end%>
+<!-- </div> -->  
+<!-- <%#@articles.each do |article|%>
+  <div class="media mb-4 mt-4">
+    <%#=image_tag(article.image,size:'140x140',class:"align-self-start mr-3")%>
+    <div class="media-body">
+      <h4 class="mt-0"><%#=article.title%></h4>
+      <h6 class="mt-0"><%#=article.body.truncate(200)%><%#=link_to "read more",article,class:'btn btn-primary'%></h6> 
+      Posted on<%#=article.publish_date.strftime("%B %d %Y")%><br>
+      <%#= link_to article.category.name,article.category%> 
+    </div>
+  </div>   
+<%#end%>   -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <h1>list of articles</h1>
+<ol> -->
+  <%#@articles.each do |article|%>  
+    <%#if article.is_published%>    
+      <!-- <li> -->
+      <%#=#link_to article.title,article_path(article)%> - <%#=link_to Category.find(article.category_id).name,category_path(article.category_id)%> 
+      <!-- </li> -->
+      <%#end%>
+  <%#end%>
+<!-- </ol>
+<h1>Name of the articles that is to be published </h1>
+<ol> -->
+<%#Article.where(is_published:false).each do |article|%>
+  <!-- <li><#@= article.title%><%#= article.publish_date%></li> -->
+<%#end%>
+<!-- </ol> -->
+<!-- <br/><br/> -->
+<%#if (user_signed_in?) && (can? :create,Article.new)%>
+  <%#=link_to 'Add Article',new_article_path%>
+<%#end%>
+
+
+<!-- <h1>roles</h1><br> -->
+
+
+<%#User.all.each do|user|%>
+  <%#=user.email%>
+  <!-- <%#= user.roles.pluck(:name).join(",")%><br> -->
+<%#end%>

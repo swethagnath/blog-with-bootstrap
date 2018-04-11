@@ -1,0 +1,151 @@
+<div class="row">	 
+<!-- Post Content Column -->
+    <div class="col-lg-8">    
+       <h1 class="mt-4 text-center"><%=@article.title%></h1>	
+<!-- Title -->
+<!-- Author -->
+		<%=image_tag(@article.image,class:"img-fluid")%>	
+		<hr>
+    	<p class="fontShow">			    
+			<%=link_to @article.category.name,@article.category%>
+		</p>
+	    <hr>
+<!-- Date/Time -->
+		<p>Posted on <%= @article.publish_date.strftime("%B %d %Y %H:%M %p")%></p>
+		<hr>
+<!-- Preview Image -->	
+<!-- Post Content -->
+		<p><%= raw(@article.body)%></p>
+	    <hr>  	          
+<!-- Single Comment -->
+		<div id="comment_path">
+			<%@article.comments.each do |comment|%>
+			  	<div class="media mb-4 comment_id_<%=comment.id%>">
+			    	<img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
+			    	<div class="media-body" id="blog_comment">
+			      		<h5 class="mt-0"><%=comment.user.try(:email)%></h5>	
+			      		<%if can? :update,comment%>
+					    	<%=best_in_place comment,:body%>	
+					    <%else%>
+					    	<%=comment.body%>
+					    <%end%>
+					    <div class="review-rating" data-score="<%=comment.rating%>"></div>	
+					    <%if can? :destroy,comment%>
+					   		<%=link_to "delete",comment_path(comment),method: :delete,remote:true%> 
+					   	<%end%>
+			    	</div>
+			  	</div>
+			<%end%>
+		</div>
+		<div id="error_comment">
+		</div>
+<!-- Comment with nested comments -->
+	<%if user_signed_in?%>
+		<div class="card my-4">
+			<h5 class="card-header">Leave A Comment</h5>
+			<div class="card-body">
+	  			<%= form_for(@comment,remote: true) do |f|%>
+	  				<%=f.hidden_field :article_id,value:@article.id%><br/>
+	  				<div class="form-group">					
+	  					<%=f.text_area :body,class:"form-control"%>
+	  				</div>
+	  				<label for="review_rating">Rating</label>
+	  				<div id="rating-form"></div>  
+	  				<br>
+	  				<%= f.submit "Add Comment",class: "btn btn-primary"%>
+	  			<%end%>
+			</div>
+		</div>
+	<%end%>
+	</div>
+	 <div class="col-md-4">
+      <!-- Categories Widget -->
+      <div class="card my-4">
+        <h5 class="card-header">Categories</h5>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-lg-12">
+              <ul class="list-unstyled mb-0">
+              	<div class="col-lg-12">
+              		<ul class="list-group">
+          				<%Category.roots.each do |category|%>
+                			<li class="list-group-item justify-content-between">
+                				<%=link_to category.name,category_path(category.id)%><span class="badge badge-default 
+                				 badge-secondary badge-pill float-right"><%=category.articles.count%></span><br>  
+                				<ul>
+		                				<%if category.children.present?%>
+		            				 		<%category.children.each do |sub_category|%>
+			            				 		<%#=link_to sub_category.name,category_path(sub_category)%>
+			            				 			<%if sub_category.children.present?%>
+			            				 				<%sub_category.children.each do |sub_category_sub|%>				<%=link_to sub_category.name,category_path(sub_category_sub)%>
+					            				 		<%end%>
+					            					<%end%>
+		            				 		<%end%>
+		                		   		<%end%>  
+                		   		</ul>   
+                			</li> 
+                		<%end%>						    
+					</ul>	                    
+                </div>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Side Widget -->
+    </div>
+  </div>
+</div>
+<script>
+	$('.review-rating').raty({ 
+		readOnly: true,
+		score: function(){
+			return $(this).attr('data-score');
+		},	
+	   number:5
+	});
+	$('#rating-form').raty({
+      scoreName: 'comment[rating]',
+      number:5
+  })
+</script>
+<!-- <h2><#%= link_to Category.find(@article.category_id).name.upcase,category_path(@article.category_id)%>
+<h3>Title</h3> 
+<%#= @article.title %> <br/>
+<h3>Body</h3>
+<%#= @article.body %> <br/>
+<h3>Publish Date</h3>
+<%#= @article.publish_date %> <br/>
+<h3>is_published</h3>
+<%#= @article.is_published %> <br/>
+<h3>feature image</h3>
+<%#= image_tag(@article.image.url) if @article.image %>
+<%#= image_tag(@article.feature_image_url,size: '360x280')%><br/><br/>
+<%# if (user_signed_in?) && (can? :update ,@article)%>
+	<%#=link_to "edit",edit_article_path(@article)%> | <%#=link_to "destroy" ,article_path(@article), method: :delete,data:{confirm:"are you sure you want to delete"}%> | <%#=link_to "all",categories_path%><br/>
+<%#end%>
+<p>list of comments</p>
+<ol>
+<%#if (user_signed_in?)%>
+	<%#@article.comments.each do |comment|%>
+		<li><%#= comment.body%>
+		<%#if can? :update,@comment%>
+			<%#= link_to "destroy",comment_path(comment.id),method: :delete,data:{confirm:"are you sure you want to delete"}%></li>
+		<%#end%>
+	<%#end%>
+<%#end%>
+</ol>
+<%#=form_for  @comment do |f|%>
+	<%#= f.hidden_field :article_id,value:@article.id%>
+	<label for ="comment_body">body</label><br/>
+	<%#= f.text_area :body %><br/>
+	<label for="comment_rating">rating</label><br/>
+	<%#= f.radio_button :rating,1 %>*
+	<%#= f.radio_button :rating,2 %>**
+	<%#= f.radio_button :rating,3 %>***
+	<%#= f.radio_button :rating,4 %>****
+	<br>
+	<%#= f.submit%>
+<%#end%>
+
+ -->

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head> 
+    <title>Blog</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <%= csrf_meta_tags %>
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>   
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+    <script src="/javascripts/jquery.js"></script>    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/raty/2.8.0/jquery.raty.min.css"></script>
+    <script src="/javascripts/jquery.raty.js"></script>
+    <script src="/javascripts/ratyrate.js.erb"></script>
+    <script src="/javascript_include_tags/bootstrap.js"></script>
+    <link href="/stylesheets/blog-home.css" rel="stylesheet">
+    <link href="/stylesheets/bootstrap.css" rel="stylesheet">
+    <link href="/stylesheets/custom.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Lobster" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Bitter" rel="stylesheet">
+    <script src="https://cdn.ckeditor.com/4.8.0/standard/ckeditor.js"></script>
+    <script src="/stylesheets/custom.css"></script>
+    <script src="javascripts/jquery.growl.js" type="text/javascript"></script>
+    <link href="stylesheets/jquery.growl.css" rel="stylesheet" type="text/css"/> </script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script> 
+  </head>
+  <body>
+    <%= render '/layouts/nav'%>
+    <div class="container">
+      <%=notice%>
+      <%=alert%> 
+      <%=yield%>       
+    </div>    
+    <!-- <footer class="py-1 bg-dark fixed-bottom">
+      <div class="container">
+        <p class="m-0 text-center text-white">Copyright &copy; Your Website 2018</p>
+      </div>
+    </footer> -->
+  </body>
+</html>

@@ -1,0 +1,15 @@
+$('.adding-category').append('<%=escape_javascript render 'category'%>');
+$('#new_category')[0].reset();
+$.growl({ title: "Growl", message: "added to category!" });
+function removingstyles(errorHandle){
+		errorHandle.classList.remove("alert-danger");
+		errorHandle.classList.remove("alert-success");
+		errorHandle.classList.remove("errorMargin");
+		errorHandle.classList.remove('formError');
+		errorHandle.classList.remove('formSuccess');
+		errorHandle.innerHTML = "";
+}
+var categoryErrorHandle = document.getElementById('categoryErrorHandle');
+var category = document.getElementById('category_name');
+removingstyles(categoryErrorHandle);
+removingstyles(category);

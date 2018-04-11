@@ -1,0 +1,8 @@
+<%if @comment.valid?%>
+	$('#comment_path').append("<%=escape_javascript render 'comment'%>");
+	$('#new_comment')[0].reset();
+<%else%>
+	$('#error_comment').html("<%=escape_javascript render 'error'%>");
+<%end%>	
+
+

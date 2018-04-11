@@ -1,0 +1,111 @@
+<h1> TO ADD CATEGORIES </h1>
+<%if(user_signed_in?) && (can? :create,Category.new)%>
+	<%=form_for @category do |f|%>
+		<%if @category.errors.any?%>
+			<ol>
+				<%@category.errors.full_messages.each do|msg|%>
+					<li><%=msg%></li>
+				<%end%>
+			</ol>
+		<%end%>
+		<div class="form-group">
+			<!-- <label for= "category_name">Name:</label><br/> -->
+			<%#= f.text_field :name,class:"form-control-lg"%>
+			<%#=f.collection_select :parent_id,Category.roots,:id,:name,include_blank: true,prompt:"select category"%><span id="categoryErrorHandle"></span><br/><br/>
+			<%=f.collection_select :parent_id,Category.all,:id,:name,include_blank: true,prompt:"select category"%>
+			<label>category</label><br>
+			<%=f.text_field :name%><br>
+			<label for ="category_descripton">Description:</label><br/><br/>
+			<div class="d-inline-flex justify-content-around">
+				<%= f.text_area :description,class:"form-control-lg d-inline"%>
+				<span id="descriptionErrorHandle" class:"d-inline"></span>
+			</div>
+			<br/><br>
+			<%= f.submit id: :submit,class:"btn btn-primary"%>
+		</div>
+	<%end%>
+<%end%>
+<script>
+	var categoryNameHandle = document.getElementById('category_name');
+	var categoryErrorHandle = document.getElementById('categoryErrorHandle');
+	var categoryDescriptionHandle = document.getElementById('category_description');
+	var descriptionErrorHandle = document.getElementById('descriptionErrorHandle');
+	var submitHandle = document.getElementById('submit');
+	var formHandle = document.getElementById('new_category');
+	var validator = {
+		categoryValid: false,
+		descriptionValid: false
+	}
+	function formErrors(fieldGroup,fieldStatus){
+		if(fieldStatus){
+			fieldGroup.classList.remove('formError');
+			fieldGroup.classList.add('formSuccess');
+		}else{
+			fieldGroup.classList.remove('formSuccess');
+			fieldGroup.classList.add('formError'); 
+		}
+	}
+	function errorHandleStyling(errorHandle,apply){
+		if(apply === 'apply'){
+			errorHandle.classList.remove("alert-success");
+			errorHandle.classList.add("alert-danger");
+			errorHandle.classList.add("errorMargin");
+		}else{
+			errorHandle.classList.remove("alert-danger");
+			errorHandle.classList.add("alert-success");
+			errorHandle.classList.add("errorMargin");
+		}
+	}
+	function nameValidation(response){
+		if(categoryNameHandle.value === ""){
+			validator.categoryValid = false;
+			errorHandleStyling(categoryErrorHandle,"apply");
+			categoryErrorHandle.innerHTML = "can't be blank";
+			formErrors(categoryNameHandle,validator.categoryValid);
+		}else if(!response){
+			validator.categoryValid = false;
+			errorHandleStyling(categoryErrorHandle,"apply");
+			categoryErrorHandle.innerHTML = "already taken";
+			formErrors(categoryNameHandle,validator.categoryValid);
+		}else{
+			validator.categoryValid = true;
+			errorHandleStyling(categoryErrorHandle,"not apply");
+			categoryErrorHandle.innerHTML = "can be used";
+			formErrors(categoryNameHandle,validator.categoryValid);
+		}
+	}
+	function descriptionValidation(){
+		if(categoryDescriptionHandle.value === ""){
+			validator.descriptionValid = false;
+			errorHandleStyling(descriptionErrorHandle,"apply");
+			descriptionErrorHandle.innerHTML = "can't be blank";
+		}else{
+			validator.descriptionValid = true;
+			errorHandleStyling(descriptionErrorHandle,"not apply");
+			descriptionErrorHandle.innerHTML = "can be used";
+		}
+	}
+	categoryNameHandle.addEventListener('blur',function(){
+			if(xhr.readyState === 4 && xhr.status === 200){
+				var response = JSON.parse(xhr.response);
+				console.log(response);
+				nameValidation(response["msg"]);
+			}
+		}
+		xhr.send();
+	},false);
+	formHandle.addEventListener('submit',function(e){
+		descriptionValidation();
+		if(Object.values(validator).includes(false)){
+			e.preventDefault();
+			setTimeout(function(){
+	        	submitHandle.disabled = false;
+	      	},100);
+	      	
+		}		
+	},false);
+	categoryNameHandle.addEventListener('blur',function(){
+		errorHandleStyling(categoryErrorHandle,false)
+		categoryErrorHandle.innerHTML = "";
+	},false);
+</script>

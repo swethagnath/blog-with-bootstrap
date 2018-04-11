@@ -1,0 +1,142 @@
+<h1 class="text-center">List Of Categories</h1>
+<div class="row">
+	<div class="col-md-8">
+		<ul class="list-group center-list mt-5 adding-category">
+			<%@categories.each do |category|%>
+				<li class="list-group-item">
+				  <%= link_to  category_path(category.id) do %> 
+				 	<%=category.name%>
+				 	<span class="badge badge-light float-right">(<%=Article.where(["is_published = ? and category_id = ?",true,category.id]).count%>-article)</span>
+				  <%end%>
+				</li>	
+			<%end%>
+		</ul>
+		</ol>
+	</div>
+	<div class="col-md-4 mt-5">
+		<%if(user_signed_in?) && (can? :create,Category.new)%>
+			<%=form_for(@category,remote:true) do |f|%>
+				<div class="form-group">
+					<!-- <label for= "category_name">Name:</label><br/> -->
+					<%#= f.text_field :name,class:"form-control-lg"%>
+					<!-- parent -->
+					<label>main category</label><br>
+					<%=f.collection_select :parent_id,Category.all,:id,:name,include_blank: true,prompt:"select category"%><br><br>
+					<label>category/subcategory</label><br>
+					<span id="categoryErrorHandle"></span><br><br>
+					<%=f.text_field :name%><br>
+					<label for ="category_descripton">Description:</label><br/>
+					<div class="d-inline-flex justify-content-around">
+						<%= f.text_area :description,class:"form-control-lg d-inline"%>
+						<span id="descriptionErrorHandle" class:"d-inline"></span>
+					</div>
+					<br/><br>
+					<%= f.submit id: :submit,class:"btn btn-primary"%>
+				</div>
+			<%end%>
+		<%end%>
+	</div>
+</div>
+<script>
+	var categoryNameHandle = document.getElementById('category_name');
+	var categoryErrorHandle = document.getElementById('categoryErrorHandle');
+	var categoryDescriptionHandle = document.getElementById('category_description');
+	var descriptionErrorHandle = document.getElementById('descriptionErrorHandle');
+	var submitHandle = document.getElementById('submit');
+	var formHandle = document.getElementById('new_category');
+	var validator = {
+		categoryValid: false,
+		descriptionValid: false
+	}
+	function formErrors(fieldGroup,fieldStatus){
+		if(fieldStatus){
+			fieldGroup.classList.remove('formError');
+			fieldGroup.classList.add('formSuccess');
+		}else{
+			fieldGroup.classList.remove('formSuccess');
+			fieldGroup.classList.add('formError'); 
+		}
+	}
+	function errorHandleStyling(errorHandle,apply){
+		if(apply === 'apply'){
+			errorHandle.classList.remove("alert-success");
+			errorHandle.classList.add("alert-danger");
+			errorHandle.classList.add("errorMargin");
+		}else{
+			errorHandle.classList.remove("alert-danger");
+			errorHandle.classList.add("alert-success");
+			errorHandle.classList.add("errorMargin");
+		}
+	}
+	function removingstyles(errorHandle){
+		errorHandle.classList.remove("alert-danger");
+		errorHandle.classList.remove("alert-success");
+		errorHandle.classList.remove("errorMargin");
+	}
+	function nameValidation(response){
+		if(categoryNameHandle.value === ""){
+			validator.categoryValid = false;
+			errorHandleStyling(categoryErrorHandle,"apply");
+			categoryErrorHandle.innerHTML = "category can't be blank";
+			formErrors(categoryNameHandle,validator.categoryValid);
+		}else if(response === "check"){
+
+		}
+		else if(!response){
+			validator.categoryValid = false;
+			errorHandleStyling(categoryErrorHandle,"apply");
+			categoryErrorHandle.innerHTML = "already taken";
+			formErrors(categoryNameHandle,validator.categoryValid);
+		}else{
+			validator.categoryValid = true;
+			errorHandleStyling(categoryErrorHandle,"not apply");
+			categoryErrorHandle.innerHTML = "can be used";
+			formErrors(categoryNameHandle,validator.categoryValid);
+		}
+	}
+	function descriptionValidation(){
+		if(categoryDescriptionHandle.value === ""){
+			validator.descriptionValid = false;
+			errorHandleStyling(descriptionErrorHandle,"apply");
+			descriptionErrorHandle.innerHTML = "description can't be blank";
+		}else{
+			validator.descriptionValid = true;
+			descriptionErrorHandle.innerHTML = "";
+		}
+	}
+	categoryNameHandle.addEventListener('blur',function(){
+		var xhr = new XMLHttpRequest();
+		xhr.open('GET',`/categories/find_category?name=${categoryNameHandle.value}`,true);
+		xhr.onreadystatechange = function(){
+			if(xhr.readyState === 4 && xhr.status === 200){
+				console.log(xhr.responseText);
+				var response = JSON.parse(xhr.responseText);
+				console.log(response);
+				nameValidation(response["msg"]);
+			}
+		}
+		xhr.send();
+	},false);
+	formHandle.addEventListener('submit',function(e){
+		descriptionValidation();
+		nameValidation("check");
+		if(Object.values(validator).includes(false)){
+			e.preventDefault();
+			setTimeout(function(){
+	        	submitHandle.disabled = false;
+	      	},100);	      	
+		}
+	},false);
+	categoryNameHandle.addEventListener('blur',function(){
+		errorHandleStyling(categoryErrorHandle,false);
+		categoryErrorHandle.innerHTML = "";
+	},false);
+	categoryNameHandle.addEventListener('focus',function(){
+		categoryErrorHandle.innerHTML = "";3
+		removingstyles(categoryErrorHandle);
+	},false);
+	categoryDescriptionHandle.addEventListener('focus',function(){
+		descriptionErrorHandle.innerHTML = "";
+		removingstyles(descriptionErrorHandle);
+	},false);
+</script>

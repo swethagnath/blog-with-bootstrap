@@ -1,0 +1,6 @@
+<li class="list-group-item">
+  <%= link_to  category_path(@category.id) do %> 
+ 	<%=@category.name%>
+ 	<span class="badge badge-light float-right">(<%=Article.where(["is_published = ? and category_id = ?",true,@category.id]).count%>-article)</span>
+  <%end%>
+</li>	

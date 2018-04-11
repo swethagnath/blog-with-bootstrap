@@ -1,0 +1,38 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+      <div class="container">
+        <!-- <a class="navbar-brand" href="#">MyBlog</a> -->
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
+              <!-- <a class="nav-link" href="#">Home
+                <span class="sr-only">(current)</span>
+              </a> -->
+            </li>
+              <%if user_signed_in?%>
+                  <li class="nav-item">
+                    <a class="nav-link"><%=current_user.email%></a>
+                  </li>
+                  <li class="nav-item">
+                    <%=link_to "log out",destroy_user_session_path,method: :delete,class:"nav-link"%>
+                  </li>
+              <%else%>
+                  <li class="nav-item">
+                    <%=link_to "register",new_user_registration_path,class:"nav-link"%>
+                  </li>
+                  <li class="nav-item">
+                    <%= link_to 'sign in',new_user_session_path,class:"nav-link"%>
+                  </li>
+              <%end%>
+                  <%= link_to "articles", articles_path,class:"nav-link" %>  <%= link_to "categories", categories_path,class:"nav-link"%>  <%#=link_to "add categories" , new_category_path,class:"nav-link"%>  <%#=link_to "add articles",new_article_path,class:"nav-link"%>
+              <%if user_signed_in?%>
+                  <!-- <p>ip address is<%#=current_user.current_sign_in_ip,class:"nav-link"%></p> -->
+              <%end%>
+            </li>
+          </ul>
+        </div>
+      </div>
+</nav>
+
